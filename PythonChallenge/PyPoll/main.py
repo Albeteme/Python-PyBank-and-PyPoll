@@ -3,64 +3,93 @@ import os
 import csv 
 
 # Declare the Path to collect data from the Instructions folder
-budget_data_csv = os.path.join("budget_data.csv")
-pathout = os.path.join("budget_analysis.txt")
+election_data_csv = os.path.join("election_data.csv")
+pathout = os.path.join("elections_results_summary.txt")
 
-with open(budget_data_csv, newline='') as csvfile:
-    csvreader = csv.reader(csvfile, delimiter=',')
+with open(election_data_csv, newline='') as csvfile:
+    csvreader = csv.reader(csvfile)
     print(csvreader)
     csv_header = next(csvreader)
-# Create empty lists to use when iterating through specific rows for variables as follow
-    mcount = 0
-    total = 0
-    PreValue = 0
-    revenue_change = 0
-    Diff = 0
-    DiffMax = 0
-    DiffMin = 0
-    
-    print(f"Header: {csv_header}")               
-    for i in csvreader:
-         month = i[0]
-         Amount = i[1]
-         iAmount = int(Amount)
-         Diff =  iAmount - PreValue
-         #For financial analysis placeholder to track greatest increase in profits 
-         if DiffMax < Diff:
-            DiffMax = Diff
-            DiffMaxDate = month
-         #For financial analysis placeholder to track greatest decrease in profits
-         if DiffMin > Diff:
-            DiffMin = Diff
-            DiffMinDate = month
+# Declare variables by creating empty lists to use when iterating through specific rows for variables as follow
+    total_votes = 0
+    khan_votes = 0
+    correy_votes = 0
+    li_votes = 0
+    otooley_votes = 0
+    winner_votes = 0
+    total_candidates = 0
+    greatest_votes = ["", 0]
+    candidate_options = []
+    candidate_votes = {}
 
-         PreValue = iAmount   
-         # Get total months 
-         mcount = mcount + 1
-         total += int(Amount)
+# Determine total of votes
 
-## Display the results as requested
-# Print Statements
-print(f'Financial Analysis'+'\n')
-print(f'----------------------------'+'\n')
-# Print the total number of months present in the dataset
-print(f'Total Months : {mcount}')
-#The total net amount of "Profit/Losses" over the entire period
-print(f'Total: $ {total}')
-# Print the average change in revenue
-# The greatest increase in profit
-print(f'Greatest Increase in Profits: {DiffMaxDate}  ($ {DiffMax})')
-# The greatest decrease in profit
-print(f'Greatest Decrease in Profits: {DiffMinDate}  ($ {DiffMin})')         
+    for row in csvreader:
+        # For total_votes count the vote of each person and add up
+        total_votes +=1
+
+        # With the four candidates when one name is found, count the times it appears and store in a list
+        # Same values can be used in the percentage of vote calculation in the print statements
+        if row[2] == "Khan": 
+            khan_votes +=1
+        elif row[2] == "Correy":
+            correy_votes +=1
+        elif row[2] == "Li": 
+            li_votes +=1
+        elif row[2] == "O'Tooley":
+            otooley_votes +=1
+
+ # To find the winner we want to make a dictionary out of the two lists we previously created 
+candidates = ["Khan", "Correy", "Li","O'Tooley"]
+votes = [khan_votes, correy_votes,li_votes,otooley_votes]
+
+# We zip them together the list of candidate(key) and the total votes(value)
+# Return the winner using a max function of the dictionary 
+dict_candidates_and_votes = dict(zip(candidates,votes))
+key = max(dict_candidates_and_votes, key=dict_candidates_and_votes.get)
+
+# Print a the summary of the analysis
+khan_percent = (khan_votes/total_votes) *100
+correy_percent = (correy_votes/total_votes) * 100
+li_percent = (li_votes/total_votes)* 100
+otooley_percent = (otooley_votes/total_votes) * 100
+
+# Print the summary table
+print(f"Election Results")
+print(f"----------------------------")
+print(f"Total Votes: {total_votes}")
+print(f"----------------------------")
+print(f"Khan: {khan_percent:.3f}% ({khan_votes})")
+print(f"Correy: {correy_percent:.3f}% ({correy_votes})")
+print(f"Li: {li_percent:.3f}% ({li_votes})")
+print(f"O'Tooley: {otooley_percent:.3f}% ({otooley_votes})")
+print(f"----------------------------")
+print(f"Winner: {key}")
+print(f"----------------------------")
 
 # output file to generate 
 
-#Write to the text path
-with open(pathout, "w") as file:
-       
-    file.write(f"Financial Analysis"+'\n')
-    file.write(f"----------------------------"+'\n')
-    file.write(f"Total Months: {mcount}")
-    file.write(f"Total: $ {total}")
-    file.write(f'Greatest Increase in Profits: {DiffMaxDate}  ($ {DiffMax})')
-    file.write(f'Greatest Decrease in Profits: {DiffMinDate}  ($ {DiffMin})') 
+#Write to the text path# 
+with open(pathout,"w") as file:
+
+    file.write(f"Election Results")
+    file.write("\n")
+    file.write(f"----------------------------")
+    file.write("\n")
+    file.write(f"Total Votes: {total_votes}")
+    file.write("\n")
+    file.write(f"----------------------------")
+    file.write("\n")
+    file.write(f"Khan: {khan_percent:.3f}% ({khan_votes})")
+    file.write("\n")
+    file.write(f"Correy: {correy_percent:.3f}% ({correy_votes})")
+    file.write("\n")
+    file.write(f"Li: {li_percent:.3f}% ({li_votes})")
+    file.write("\n")
+    file.write(f"O'Tooley: {otooley_percent:.3f}% ({otooley_votes})")
+    file.write("\n")
+    file.write(f"----------------------------")
+    file.write("\n")
+    file.write(f"Winner: {key}")
+    file.write("\n")
+    file.write(f"----------------------------")
