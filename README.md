@@ -1,6 +1,6 @@
 # PythonChallenge
 
-In the work presented here, I created a Python script for analyzing the financial records of a company based on a set of financial data called budget_data.csv. The dataset is composed of two columns: Date and Profit/Losses. I created a Python script that analyzes the records to calculate each of the following:
+In the analysis presented here, I created a Python script for analyzing the financial records of a company based on a set of financial data called budget_data.csv. The dataset is composed of two columns: Date and Profit/Losses. I created a Python script that analyzes the records to calculate each of the following:
 
     The total number of months included in the dataset
 
